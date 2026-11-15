@@ -1,0 +1,85 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // DOM
+    const form = document.getElementById('form-queja');
+    const notificacion = document.getElementById('notificacion');
+    const btnToggleView = document.getElementById('btn-toggle-view');
+    const vistaUsuario = document.getElementById('vista-usuario');
+    const vistaAdmin = document.getElementById('vista-admin');
+    const listaQuejas = document.getElementById('lista-quejas');
+
+    let modoAdmin = false;
+
+    // Formulario de queja-sugerencia
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            
+            const nuevaQueja = {
+                id: Date.now(),
+                nombre: document.getElementById('nombre').value,
+                asunto: document.getElementById('asunto').value,
+                mensaje: document.getElementById('mensaje').value
+            };
+
+            const quejasGuardadas = JSON.parse(localStorage.getItem('quejas_db')) || [];
+            quejasGuardadas.push(nuevaQueja);
+            
+            localStorage.setItem('quejas_db', JSON.stringify(quejasGuardadas));
+
+            notificacion.classList.remove('oculto');
+            form.reset();
+
+            setTimeout(() => {
+                notificacion.classList.add('oculto');
+            }, 3000);
+        });
+    }
+
+    // Cambiar entre usuario y admin
+    btnToggleView.addEventListener('click', () => {
+        modoAdmin = !modoAdmin; // Invertir el modo
+        
+        if (modoAdmin) {
+            vistaUsuario.classList.add('oculto');
+            vistaAdmin.classList.remove('oculto');
+            btnToggleView.textContent = 'Entrar como usuario';
+            renderizarQuejas(); // Dibujar la lista
+        } else {
+            vistaAdmin.classList.add('oculto');
+            vistaUsuario.classList.remove('oculto');
+            btnToggleView.textContent = 'Entrar como admin';
+        }
+    });
+
+    // Función para actualizar listado en el html
+    function renderizarQuejas() {
+        const quejasGuardadas = JSON.parse(localStorage.getItem('quejas_db')) || [];
+        listaQuejas.innerHTML = '';
+
+        if (quejasGuardadas.length === 0) {
+            listaQuejas.innerHTML = '<p class="mensaje-vacio">No hay mensajes en el buzón.</p>';
+            return;
+        }
+
+        quejasGuardadas.forEach(queja => {
+            const card = document.createElement('div');
+            card.className = 'queja-card';
+            card.innerHTML = `
+                <h3>${queja.asunto}</h3>
+                <p><strong>De:</strong> ${queja.nombre}</p>
+                <p>${queja.mensaje}</p>
+                <button class="btn-eliminar" onclick="eliminarQueja(${queja.id})">Eliminar</button>
+            `;
+            listaQuejas.appendChild(card);
+        });
+    }
+
+    // Función para eliminar queja
+    window.eliminarQueja = function(id) {
+        let quejasGuardadas = JSON.parse(localStorage.getItem('quejas_db')) || [];
+        
+        quejasGuardadas = quejasGuardadas.filter(queja => queja.id !== id);
+        localStorage.setItem('quejas_db', JSON.stringify(quejasGuardadas));   
+        renderizarQuejas();
+    };
+});

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzón de Quejas y Sugerencias</title>
+    <link rel="stylesheet" href="css/style.min.css">
+</head>
+<body>
+    <!-- Botón cambiar usuario a admin -->
+    <div class="top-bar">
+        <button id="btn-toggle-view">Entrar como admin</button>
+    </div>
+
+    <div class="container">
+        <!-- logo -->
+        <div class="logo-container">
+            <img src="img/logo-ogb.svg" alt="Logo" class="logo">
+        </div>
+
+        <!-- Formulario usuario -->
+        <div id="vista-usuario">
+            <h1>Buzón de Sugerencias</h1>
+            <form id="form-queja">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="asunto">Asunto:</label>
+                    <input type="text" id="asunto" required>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje:</label>
+                    <textarea id="mensaje" rows="4" required></textarea>
+                </div>
+                <button type="submit">Enviar Mensaje</button>
+            </form>
+            <p id="notificacion" class="oculto">¡Mensaje enviado con éxito!</p>
+        </div>
+
+        <!-- Listado de quejas modo admin -->
+        <div id="vista-admin" class="oculto">
+            <h1>Panel de Administración</h1>
+            <div id="lista-quejas">
+                <!-- Aquí aparecerán los mensajes dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.min.js"></script>
+</body>
+</html>
